@@ -1,5 +1,6 @@
 import { useAuth } from '../hooks/useAuth.js';
 import { useState } from 'react';
+import { reservationService } from '../services/api.js';
 
 function Dashboard() {
     const { user, logout } = useAuth();
@@ -32,9 +33,33 @@ function Dashboard() {
     const weekDays = getWeekDays(currentDate);
     const heures = Array.from({ length: 12 }, (_, i) => i + 8); // 8h à 19h
 
+
+
+    const handleCellClick = (day, heure) => {
+        setSelectedSlot({ date: day.dateISO, dateAffichee: day.dateAffichee, heure });
+        setIsModalOpen(true);
+    };
+
+    const handleConfirmBooking = async () => {
+        try {
+            await reservationService.create({
+                date_resa: selectedSlot.date,
+                heure_debut: `${selectedSlot.heure}:00:00`,
+                heure_fin: `${selectedSlot.heure + 1}:00:00`,
+                objet: objet
+            });
+            alert("Réservation réussie !");
+            setIsModalOpen(false);
+            setObjet('');
+            // Idéalement, ici on rafraîchirait la liste des réservations
+        } catch (err) {
+            alert(err.message || "Erreur lors de la réservation");
+        }
+    };
+
     return (
         <div className="dashboard-container">
-            {/* Header style Figma */}
+            
             <header style={{ backgroundColor: '#2dd4bf', padding: '20px', color: 'black', display: 'flex', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', gap: '20px', fontSize: '1.2rem', fontWeight: 'bold' }}>
                     <span>Accueil</span>

@@ -36,3 +36,11 @@ export const authService = {
     }),
     getProfile: () => fetchAPI('/auth/me')
 };
+
+export const reservationService = {
+    // ... vos autres méthodes
+    create: (data) => fetchAPI('/reservations', {
+        method: 'POST',
+        body: JSON.stringify(data)
+    })
+};
