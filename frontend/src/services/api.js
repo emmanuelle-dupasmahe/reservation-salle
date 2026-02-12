@@ -25,6 +25,7 @@ async function fetchAPI(endpoint, options = {}) {
         throw error;
     }
 }
+
 export const authService = {
     register: (userData) => fetchAPI('/auth/register', {
         method: 'POST',
@@ -38,9 +39,17 @@ export const authService = {
 };
 
 export const reservationService = {
-    // ... vos autres méthodes
+    // récupérer le planning hebdomadaire
+    getPlanning: (start, end) => fetchAPI(`/reservations?start=${start}&end=${end}`),
+    
+    // créer une nouvelle réservation
     create: (data) => fetchAPI('/reservations', {
         method: 'POST',
         body: JSON.stringify(data)
+    }),
+
+    // annuler une réservation 
+    delete: (id) => fetchAPI(`/reservations/${id}`, {
+        method: 'DELETE'
     })
 };
