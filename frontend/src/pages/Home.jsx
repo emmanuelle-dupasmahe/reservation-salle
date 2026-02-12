@@ -2,15 +2,11 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth.js';
 
 
-
 function
     Home() {
 
     const
         { isAuthenticated } = useAuth();
-
-
-
 
     return (
 
