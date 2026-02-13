@@ -78,11 +78,33 @@ function Dashboard() {
     };
 
     const handleConfirmBooking = async () => {
+        // VÉRIFICATION : Est-ce que le créneau est libre sur toute la durée ?
+        const isCollision = reservations.some(resa => {
+            const d = new Date(resa.date_resa);
+            const dateLocaleBDD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+            // On ne vérifie que les réservations du même jour
+            if (dateLocaleBDD !== selectedSlot.date) return false;
+
+            const hStartExistante = parseInt(resa.heure_debut.split(':')[0]);
+            const hEndExistante = parseInt(resa.heure_fin.split(':')[0]);
+
+            // Logique mathématique de collision :
+            // Une collision existe si (Début < FinExistante) ET (Fin > DébutExistante)
+            return selectedSlot.heure < hEndExistante && heureFin > hStartExistante;
+        });
+
+        if (isCollision) {
+            alert("Impossible : Un autre événement occupe déjà une partie de ce créneau !");
+            return; // On arrête tout ici
+        }
+
+        // ENVOI SI TOUT EST OK
         try {
             await reservationService.create({
                 date_resa: selectedSlot.date,
                 heure_debut: `${selectedSlot.heure}:00:00`,
-                heure_fin: `${selectedSlot.heure + 1}:00:00`,
+                heure_fin: `${heureFin}:00:00`,
                 objet: objet
             });
             setIsModalOpen(false);
@@ -135,8 +157,13 @@ function Dashboard() {
                                             const m = String(d.getMonth() + 1).padStart(2, '0');
                                             const dayNum = String(d.getDate()).padStart(2, '0');
                                             const dateLocaleBDD = `${y}-${m}-${dayNum}`;
-                                            const hStart = parseInt(r.heure_debut.split(':')[0]);
-                                            return dateLocaleBDD === day.dateISO && hStart === heure;
+
+                                            // On transforme les heures en nombres pour comparer
+                                            const hStartBDD = parseInt(r.heure_debut.split(':')[0]);
+                                            const hEndBDD = parseInt(r.heure_fin.split(':')[0]);
+
+                                            // La case est occupée si : même jour ET (heure de la case >= début ET heure de la case < fin)
+                                            return dateLocaleBDD === day.dateISO && (heure >= hStartBDD && heure < hEndBDD);
                                         });
 
                                         // couleur des cellules
