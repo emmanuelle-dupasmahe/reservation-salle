@@ -60,7 +60,7 @@ function Dashboard() {
     };
 
     const weekDays = getWeekDays(currentDate);
-    const heures = Array.from({ length: 12 }, (_, i) => i + 8);
+    const heures = Array.from({ length: 11 }, (_, i) => i + 8);
 
     const handleCellClick = (day, heure) => {
         setSelectedSlot({ date: day.dateISO, dateAffichee: day.dateAffichee, heure });
@@ -189,23 +189,32 @@ function Dashboard() {
                                                 {resa && (
                                                     <div className="relative h-full flex flex-col justify-center items-center text-[10px] text-center uppercase leading-tight">
 
-                                                        {/* BOUTON SUPPRIMER (Seulement si c'est ma réservation) */}
-                                                        {Number(resa.user_id) === Number(user.id) && (
-                                                            <button
-                                                                onClick={(e) => {
-                                                                    e.stopPropagation(); // Empêche d'ouvrir la modale de création
-                                                                    if (window.confirm("Annuler cette réservation ?")) {
-                                                                        handleDelete(resa.id);
-                                                                    }
-                                                                }}
-                                                                className="absolute -top-1 -right-1 bg-red-600 text-white w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-800 transition-colors shadow-md z-10"
-                                                            >
-                                                                ×
-                                                            </button>
-                                                        )}
+                                                        {/* On n'affiche la croix et le texte QUE si c'est la 1ère heure du créneau */}
+                                                        {parseInt(resa.heure_debut.split(':')[0]) === heure ? (
+                                                            <>
+                                                                {/* BOUTON SUPPRIMER (Seulement sur la 1ère case) */}
+                                                                {Number(resa.user_id) === Number(user.id) && (
+                                                                    <button
+                                                                        onClick={(e) => {
+                                                                            e.stopPropagation();
+                                                                            if (window.confirm("Annuler cette réservation ?")) {
+                                                                                handleDelete(resa.id);
+                                                                            }
+                                                                        }}
+                                                                        className="absolute -top-1 -right-1 bg-red-600 text-white w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-800 transition-colors shadow-md z-10 font-bold"
+                                                                    >
+                                                                        ×
+                                                                    </button>
+                                                                )}
 
-                                                        <p className="font-black">{resa.lastname}</p>
-                                                        <p className="font-normal lowercase italic truncate w-full">{resa.objet}</p>
+                                                                {/* INFOS DE LA RÉUNION */}
+                                                                <p className="font-black text-black/80">{resa.lastname}</p>
+                                                                <p className="font-normal lowercase italic truncate w-full px-1">{resa.objet}</p>
+                                                            </>
+                                                        ) : (
+                                                            /* Symbole discret pour les heures suivantes du même créneau */
+                                                            <span className=" text-black/50 font-bold">⋮</span>
+                                                        )}
                                                     </div>
                                                 )}
                                             </td>
@@ -240,7 +249,7 @@ function Dashboard() {
                                     className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
                                 >
                                     {/* On génère les heures de fin possibles jusqu'à 20h */}
-                                    {Array.from({ length: 20 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
+                                    {Array.from({ length: 19 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
                                         <option key={h} value={h}>{h}h00</option>
                                     ))}
                                 </select>
