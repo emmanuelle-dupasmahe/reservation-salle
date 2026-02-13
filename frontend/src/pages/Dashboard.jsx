@@ -4,7 +4,7 @@ import { reservationService } from '../services/api.js';
 
 function Dashboard() {
     const { user, logout } = useAuth();
-    const [currentDate] = useState(new Date()); 
+    const [currentDate] = useState(new Date());
 
     // ÉTATS AJOUTÉS POUR LA MODALE
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,7 +14,7 @@ function Dashboard() {
     const getWeekDays = (date) => {
         const startOfWeek = new Date(date);
         const day = startOfWeek.getDay();
-        const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1); 
+        const diff = startOfWeek.getDate() - day + (day === 0 ? -6 : 1);
         startOfWeek.setDate(diff);
 
         const days = [];
@@ -35,7 +35,7 @@ function Dashboard() {
     };
 
     const weekDays = getWeekDays(currentDate);
-    const heures = Array.from({ length: 12 }, (_, i) => i + 8); 
+    const heures = Array.from({ length: 12 }, (_, i) => i + 8);
 
     const handleCellClick = (day, heure) => {
         setSelectedSlot({ date: day.dateISO, dateAffichee: day.dateAffichee, heure });
@@ -83,11 +83,11 @@ function Dashboard() {
                         <tr>
                             <th style={{ width: '50px' }}></th>
                             {weekDays.map((day, index) => (
-                                <th key={index} style={{ 
-                                    backgroundColor: index === 0 ? '#94a3b8' : '#2dd4bf', 
+                                <th key={index} style={{
+                                    backgroundColor: index === 0 ? '#94a3b8' : '#2dd4bf',
                                     color: 'black', borderRadius: '10px', padding: '15px', textTransform: 'uppercase', fontSize: '0.9rem'
                                 }}>
-                                    {day.nom} <br /> 
+                                    {day.nom} <br />
                                     <span style={{ fontSize: '0.8rem' }}>{day.dateAffichee}</span>
                                 </th>
                             ))}
@@ -100,9 +100,9 @@ function Dashboard() {
                                     {heure}h
                                 </td>
                                 {weekDays.map((day, index) => (
-                                    <td key={index} 
+                                    <td key={index}
                                         onClick={() => handleCellClick(day, heure)} // AJOUT DU CLIC
-                                        style={{ 
+                                        style={{
                                             backgroundColor: '#334155', height: '60px', borderRadius: '8px', border: '1px solid #475569', cursor: 'pointer'
                                         }}
                                     >
@@ -127,14 +127,14 @@ function Dashboard() {
                     <div style={{ backgroundColor: '#1e293b', padding: '30px', borderRadius: '15px', border: '2px solid #2dd4bf', width: '400px', color: 'white' }}>
                         <h2 style={{ color: '#2dd4bf' }}>Nouvelle Réservation</h2>
                         <p>Le <strong>{selectedSlot.dateAffichee}</strong> à <strong>{selectedSlot.heure}h00</strong></p>
-                        
+
                         <div style={{ margin: '20px 0' }}>
                             <label>Objet de la réunion :</label>
-                            <input 
-                                type="text" 
-                                value={objet} 
+                            <input
+                                type="text"
+                                value={objet}
                                 onChange={(e) => setObjet(e.target.value)}
-                                style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: 'none', color: 'black' }}
+                                style={{ width: '100%', padding: '10px', marginTop: '5px', borderRadius: '5px', border: 'none', color: 'white' }}
                                 placeholder="Ex: Point projet"
                             />
                         </div>

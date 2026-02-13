@@ -29,7 +29,7 @@ export const createReservation = async (req, res) => {
 
         // insertion
         await db.execute(
-            'INSERT INTO reservations (date_resa, heure_debut, heure_fin, objet, id_user) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO reservations (date_resa, heure_debut, heure_fin, objet, user_id) VALUES (?, ?, ?, ?, ?)',
             [date_resa, heure_debut, heure_fin, objet, userId]
         );
 
