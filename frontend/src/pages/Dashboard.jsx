@@ -1,15 +1,30 @@
 import { useAuth } from '../hooks/useAuth.js';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { reservationService } from '../services/api.js';
 
 function Dashboard() {
     const { user, logout } = useAuth();
     const [currentDate] = useState(new Date());
 
+    const [reservations, setReservations] = useState([]);//pour changer la couleur des créneaux réservés
+
     // ÉTATS AJOUTÉS POUR LA MODALE
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState({ date: '', dateAffichee: '', heure: '' });
     const [objet, setObjet] = useState('');
+
+    const loadPlanning = async () => {
+        try {
+            const data = await reservationService.getPlanning();
+            setReservations(data);
+        } catch (err) {
+            console.error("Erreur chargement planning:", err);
+        }
+    };
+
+    useEffect(() => {
+        loadPlanning();
+    }, []);
 
     const getWeekDays = (date) => {
         const startOfWeek = new Date(date);
@@ -53,6 +68,7 @@ function Dashboard() {
             alert("Réservation réussie !");
             setIsModalOpen(false);
             setObjet('');
+            loadPlanning();
         } catch (err) {
             alert(err.message || "Erreur lors de la réservation");
         }
@@ -96,25 +112,31 @@ function Dashboard() {
                     <tbody>
                         {heures.map(heure => (
                             <tr key={heure}>
-                                <td style={{ textAlign: 'right', paddingRight: '15px', fontSize: '0.9rem', color: '#2dd4bf', fontWeight: 'bold' }}>
-                                    {heure}h
-                                </td>
-                                {weekDays.map((day, index) => (
-                                    <td key={index}
-                                        onClick={() => handleCellClick(day, heure)} // AJOUT DU CLIC
-                                        style={{
-                                            backgroundColor: '#334155', height: '60px', borderRadius: '8px', border: '1px solid #475569', cursor: 'pointer'
-                                        }}
-                                    >
-                                        {/* Affichage fictif pour l'exemple */}
-                                        {heure === 9 && index === 0 && (
-                                            <div style={{ backgroundColor: '#94a3b8', color: 'black', fontSize: '0.7rem', padding: '5px', borderRadius: '5px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'center' }}>
-                                                <strong>{user?.lastname?.toUpperCase()} {user?.firstname}</strong>
-                                                <span>Réunion projet</span>
-                                            </div>
-                                        )}
-                                    </td>
-                                ))}
+                                <td style={{ color: '#2dd4bf' }}>{heure}h</td>
+                                {weekDays.map((day, index) => {
+                                    // ON CHERCHE SI UNE RÉSERVATION EXISTE POUR CETTE CASE
+                                    const resa = reservations.find(r =>
+                                        r.date_resa.split('T')[0] === day.dateISO &&
+                                        parseInt(r.heure_debut.split(':')[0]) === heure
+                                    );
+
+                                    return (
+                                        <td key={index}
+                                            onClick={() => !resa && handleCellClick(day, heure)}
+                                            style={{
+                                                backgroundColor: resa ? (resa.user_id === user.id ? '#94a3b8' : '#ef4444') : '#334155',
+                                                height: '60px', borderRadius: '8px', cursor: resa ? 'default' : 'pointer'
+                                            }}
+                                        >
+                                            {resa && (
+                                                <div style={{ color: 'black', fontSize: '0.7rem', textAlign: 'center' }}>
+                                                    <strong>{resa.lastname.toUpperCase()} {resa.firstname}</strong><br />
+                                                    {resa.objet}
+                                                </div>
+                                            )}
+                                        </td>
+                                    );
+                                })}
                             </tr>
                         ))}
                     </tbody>
