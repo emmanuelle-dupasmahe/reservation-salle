@@ -7,7 +7,7 @@ async function fetchAPI(endpoint, options = {}) {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` })
     };
-    
+
     try {
         const response = await fetch(`${API_URL}${endpoint}`, {
             ...options,
@@ -41,7 +41,7 @@ export const authService = {
 export const reservationService = {
     // récupérer le planning hebdomadaire
     getPlanning: (start, end) => fetchAPI(`/reservations?start=${start}&end=${end}`),
-    
+
     // créer une nouvelle réservation
     create: (data) => fetchAPI('/reservations', {
         method: 'POST',
@@ -49,7 +49,12 @@ export const reservationService = {
     }),
 
     // annuler une réservation 
-    delete: (id) => fetchAPI(`/reservations/${id}`, {
-        method: 'DELETE'
-    })
+    delete: async (id) => {
+        const response = await fetch(`${API_URL}/reservations/${id}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        });
+        if (!response.ok) throw new Error("Erreur lors de la suppression");
+        return true;
+    }
 };
