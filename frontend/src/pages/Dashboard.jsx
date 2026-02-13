@@ -66,6 +66,15 @@ function Dashboard() {
         setIsModalOpen(true);
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await reservationService.delete(id);
+            loadPlanning(); // On rafraîchit le tableau immédiatement
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
     const handleConfirmBooking = async () => {
         try {
             await reservationService.create({
@@ -149,9 +158,25 @@ function Dashboard() {
                                                 className={`${cellClass} h-16 rounded-lg transition-all p-2 border-2 border-transparent`}
                                             >
                                                 {resa && (
-                                                    <div className="text-[10px] text-center uppercase leading-tight">
+                                                    <div className="relative h-full flex flex-col justify-center items-center text-[10px] text-center uppercase leading-tight">
+
+                                                        {/* BOUTON SUPPRIMER (Seulement si c'est ma réservation) */}
+                                                        {Number(resa.user_id) === Number(user.id) && (
+                                                            <button
+                                                                onClick={(e) => {
+                                                                    e.stopPropagation(); // Empêche d'ouvrir la modale de création
+                                                                    if (window.confirm("Annuler cette réservation ?")) {
+                                                                        handleDelete(resa.id);
+                                                                    }
+                                                                }}
+                                                                className="absolute -top-1 -right-1 bg-red-600 text-white w-4 h-4 rounded-full flex items-center justify-center hover:bg-red-800 transition-colors shadow-md z-10"
+                                                            >
+                                                                ×
+                                                            </button>
+                                                        )}
+
                                                         <p className="font-black">{resa.lastname}</p>
-                                                        <p className="font-normal lowercase italic truncate">{resa.objet}</p>
+                                                        <p className="font-normal lowercase italic truncate w-full">{resa.objet}</p>
                                                     </div>
                                                 )}
                                             </td>
