@@ -9,6 +9,7 @@ function Dashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState({ date: '', dateAffichee: '', heure: '' });
     const [objet, setObjet] = useState('');
+    const [heureFin, setHeureFin] = useState('');
 
     const nextWeek = () => {
         const newDate = new Date(currentDate);
@@ -63,6 +64,7 @@ function Dashboard() {
 
     const handleCellClick = (day, heure) => {
         setSelectedSlot({ date: day.dateISO, dateAffichee: day.dateAffichee, heure });
+        setHeureFin(heure + 1);
         setIsModalOpen(true);
     };
 
@@ -94,7 +96,7 @@ function Dashboard() {
     return (
         <div className="min-h-screen bg-slate-900 text-white">
             <header className="bg-teal-400 p-5 text-black flex justify-between items-center shadow-lg font-bold">
-                <span>Planning Salles</span>
+                <span>Planning Salle</span>
                 <button onClick={logout} className="border border-black px-4 py-1 rounded hover:bg-black hover:text-white transition-all">
                     Déconnexion ({user?.firstname})
                 </button>
@@ -192,21 +194,46 @@ function Dashboard() {
             {isModalOpen && (
                 <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
                     <div className="bg-slate-800 p-8 rounded-2xl border-2 border-teal-400 w-full max-w-md shadow-2xl text-white">
-                        <h2 className="text-teal-400 text-2xl font-bold mb-4 uppercase">Réservation</h2>
-                        <p className="mb-6">Le <strong>{selectedSlot.dateAffichee}</strong> à <strong>{selectedSlot.heure}h00</strong></p>
+                        <h2 className="text-teal-400 text-2xl font-bold mb-4 uppercase italic">Nouvelle Réservation</h2>
+
+                        <p className="mb-6 text-slate-300">Le {selectedSlot.dateAffichee}</p>
+
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Début</label>
+                                <div className="p-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
+                                    {selectedSlot.heure}h00
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Fin</label>
+                                <select
+                                    value={heureFin}
+                                    onChange={(e) => setHeureFin(parseInt(e.target.value))}
+                                    className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
+                                >
+                                    {/* On génère les heures de fin possibles jusqu'à 20h */}
+                                    {Array.from({ length: 20 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
+                                        <option key={h} value={h}>{h}h00</option>
+                                    ))}
+                                </select>
+                            </div>
+                        </div>
+
                         <div className="mb-6">
-                            <label className="block mb-2">Objet :</label>
+                            <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Objet de la réunion</label>
                             <input
                                 type="text"
                                 value={objet}
                                 onChange={(e) => setObjet(e.target.value)}
                                 className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 outline-none focus:border-teal-400 text-white"
-                                placeholder="Titre de la réunion..."
+                                placeholder="Ex: Briefing équipe..."
                             />
                         </div>
+
                         <div className="flex gap-4 justify-end">
-                            <button onClick={() => setIsModalOpen(false)} className="px-6 py-2 rounded-lg border border-white">Annuler</button>
-                            <button onClick={handleConfirmBooking} className="px-6 py-2 rounded-lg bg-teal-400 text-black font-bold">Confirmer</button>
+                            <button onClick={() => setIsModalOpen(false)} className="px-6 py-2 rounded-lg border border-slate-600 hover:bg-slate-700 transition-all">Annuler</button>
+                            <button onClick={handleConfirmBooking} className="px-6 py-2 rounded-lg bg-teal-400 text-black font-black hover:bg-teal-300 transition-all shadow-lg">CONFIRMER</button>
                         </div>
                     </div>
                 </div>

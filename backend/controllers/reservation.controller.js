@@ -48,3 +48,27 @@ export const createReservation = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+//fonction pour supprimer une réservation
+
+export const deleteReservation = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id; // Récupéré via le middleware auth
+
+        // On vérifie que la réservation appartient bien à l'utilisateur
+
+        const [result] = await db.query(
+            'DELETE FROM reservations WHERE id = ? AND user_id = ?',
+            [id, userId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Réservation non trouvée ou non autorisée" });
+        }
+
+        res.json({ message: "Réservation supprimée avec succès" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
