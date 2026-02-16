@@ -173,7 +173,7 @@ function Dashboard() {
                                             const dateResaStr = day.dateISO;
 
                                             if (dateResaStr < todayStr) {
-                                                cellClass = "bg-slate-500 opacity-50 cursor-default"; // GRIS pour dates passées
+                                                cellClass = "bg-gray-500 text-black cursor-default"; // GRIS pour dates passées
                                             } else if (Number(resa.user_id) === Number(user.id)) {
                                                 cellClass = "bg-yellow-400 text-black font-bold shadow-inner"; // JAUNE pour moi
                                             } else {
@@ -189,7 +189,7 @@ function Dashboard() {
                                                 {resa && (
                                                     <div className="relative h-full flex flex-col justify-center items-center text-[10px] text-center uppercase leading-tight">
 
-                                                        {/* On n'affiche la croix et le texte QUE si c'est la 1ère heure du créneau */}
+                                                        {/* on n'affiche la croix et le texte que si c'est la 1ère heure du créneau */}
                                                         {parseInt(resa.heure_debut.split(':')[0]) === heure ? (
                                                             <>
                                                                 {/* BOUTON SUPPRIMER (Seulement sur la 1ère case) */}
@@ -207,13 +207,13 @@ function Dashboard() {
                                                                     </button>
                                                                 )}
 
-                                                                {/* INFOS DE LA RÉUNION */}
+                                                                {/* infos de la réunion */}
                                                                 <p className="font-black text-black/80">{resa.lastname}</p>
                                                                 <p className="font-normal lowercase italic truncate w-full px-1">{resa.objet}</p>
                                                             </>
                                                         ) : (
-                                                            /* Symbole discret pour les heures suivantes du même créneau */
-                                                            <span className=" text-black/50 font-bold">⋮</span>
+                                                            /* trois points pour les heures suivantes du même créneau */
+                                                            <span className=" text-black font-bold">⋮</span>
                                                         )}
                                                     </div>
                                                 )}
@@ -248,7 +248,7 @@ function Dashboard() {
                                     onChange={(e) => setHeureFin(parseInt(e.target.value))}
                                     className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
                                 >
-                                    {/* On génère les heures de fin possibles jusqu'à 20h */}
+                                    {/* heures de fin jusqu'à 19h */}
                                     {Array.from({ length: 19 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
                                         <option key={h} value={h}>{h}h00</option>
                                     ))}

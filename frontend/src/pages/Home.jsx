@@ -12,22 +12,21 @@ function Home() {
                 Planning v1.0
             </span>
 
-            <h1 className="text-white text-5xl md:text-5xl font-black mb-4 tracking-wider">
-                RÉSERVEZ LA SALLE.
+            <h1 className="text-white uppercase text-5xl md:text-5xl font-black mb-4 tracking-wider">
+                Réservation de salle
             </h1>
 
             <p className="text-slate-400 text-lg md:text-xl max-w-lg mb-10 leading-relaxed font-light">
                 Une interface moderne pour gérer vos créneaux en équipe.
-                Simple, rapide et efficace.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 w-full max-w-sm sm:max-w-none justify-center">
                 {isAuthenticated ? (
                     <Link
                         to="/dashboard"
-                        className="bg-teal-400 text-black px-10 py-4 rounded-xl font-black text-lg hover:bg-teal-300 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)]"
+                        className="bg-teal-400 text-black uppercase px-10 py-4 rounded-xl font-black text-lg hover:bg-teal-300 transition-all shadow-[0_0_20px_rgba(45,212,191,0.3)]"
                     >
-                        ACCÉDER AU PLANNING
+                        Accéder au planning
                     </Link>
                 ) : (
                     <>
