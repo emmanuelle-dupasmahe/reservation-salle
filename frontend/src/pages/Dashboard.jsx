@@ -133,8 +133,8 @@ function Dashboard() {
                     <button onClick={nextWeek} className="bg-teal-400 text-black w-10 h-10 rounded-full font-bold">▶</button>
                 </div>
 
-                <div className="overflow-x-auto pb-4 custom-scrollbar">
-                    <table className="w-full border-separate border-spacing-2">
+                <div className="w-full overflow-x-auto custom-scrollbar pb-2">
+                    <table className="min-w-225 w-full border-separate">
                         <thead>
                             <tr>
                                 <th className="w-16"></th>
