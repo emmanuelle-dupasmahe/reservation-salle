@@ -52,11 +52,11 @@ function Profile() {
         const isCollision = allReservations.some(resa => {
             if (resa.id === editingResa.id) return false;
 
-            // Formatage de la date de la réservation existante (YYYY-MM-DD)
+            // formatage de la date de la réservation existante (YYYY-MM-DD)
             const d = new Date(resa.date_resa);
             const dateLocaleBDD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 
-            // Formatage de la date de la réservation qu'on modifie
+            // formatage de la date de la réservation qu'on modifie
             const de = new Date(editingResa.date_resa);
             const dateEditing = `${de.getFullYear()}-${String(de.getMonth() + 1).padStart(2, '0')}-${String(de.getDate()).padStart(2, '0')}`;
 
@@ -168,7 +168,7 @@ function Profile() {
                                 onChange={(e) => setEditHeureFin(parseInt(e.target.value))}
                                 className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
                             >
-                                {/* On génère les heures de fin possibles (après l'heure de début actuelle) */}
+                                {/* on génère les heures de fin possibles (après l'heure de début actuelle) */}
                                 {Array.from({ length: 12 }, (_, i) => i + 8)
                                     .filter(h => h > parseInt(editingResa?.heure_debut.split(':')[0]))
                                     .map(h => (
