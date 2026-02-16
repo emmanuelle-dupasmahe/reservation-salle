@@ -31,14 +31,26 @@ function Header() {
                         Accueil
                     </NavLink>
                     {isAuthenticated && (
-                        <NavLink
-                            to="/dashboard"
-                            className={({ isActive }) =>
-                                `text-sm font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-teal-400' : 'text-slate-400 hover:text-white'}`
-                            }
-                        >
-                            Planning
-                        </NavLink>
+                        <>
+                            <NavLink
+                                to="/dashboard"
+                                className={({ isActive }) =>
+                                    `text-sm font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-teal-400' : 'text-slate-400 hover:text-white'}`
+                                }
+                            >
+                                Planning
+                            </NavLink>
+
+                            <NavLink
+                                to="/profile"
+                                className={({ isActive }) =>
+                                    `text-sm font-bold uppercase tracking-widest transition-colors ${isActive ? 'text-teal-400' : 'text-slate-400 hover:text-white'}`
+                                }
+                            >
+                                Mon Profil
+                            </NavLink>
+                        </>
+
                     )}
                 </nav>
 
@@ -46,9 +58,13 @@ function Header() {
                 <div className="flex items-center gap-6">
                     {isAuthenticated ? (
                         <div className="flex items-center gap-4">
+
                             <span className="text-slate-400 text-sm hidden sm:inline">
-                                Hello, <span className="text-white font-bold">{user?.firstname}</span>
+                                <Link to="/profile" className="text-slate-400 text-sm hidden sm:inline hover:text-white transition-colors">
+                                    Hello, <span className="text-white font-bold">{user?.firstname}</span></Link>
+
                             </span>
+
                             <button
                                 onClick={handleLogout}
                                 className="bg-slate-800 text-white border border-slate-700 px-4 py-2 rounded-lg text-xs font-bold uppercase hover:bg-red-500/10 hover:border-red-500/50 hover:text-red-500 transition-all"
