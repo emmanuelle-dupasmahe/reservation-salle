@@ -66,7 +66,7 @@ function Register() {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <label className="block text-teal-400 text-xs font-bold mb-1 uppercase">Prénom</label>
                             <input

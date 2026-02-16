@@ -1,9 +1,51 @@
-
 /* 1 seule ligne ! */
 @import "tailwindcss";
+
 /* Classes réutilisables (optionnel) */
 @layer components {
-.btn { @apply px-6 py-2 rounded-lg font-medium transition-all; }
-.btn-primary { @apply bg-indigo-600 text-white hover:bg-indigo-700; }
-.form-input { @apply w-full px-4 py-2 border-2 rounded-lg; }
+    .btn {
+        @apply px-6 py-2 rounded-lg font-medium transition-all;
+    }
+
+    .btn-primary {
+        @apply bg-indigo-600 text-white hover:bg-indigo-700;
+    }
+
+    .form-input {
+        @apply w-full px-4 py-2 border-2 rounded-lg;
+    }
+}
+
+
+/* Personnalisation de la barre de défilement pour les navigateurs Chrome, Edge et Safari */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    /* Hauteur pour le scroll horizontal */
+    width: 8px;
+    /* Largeur pour le scroll vertical */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #0f172a;
+    /* Couleur bg-slate-900 */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #2dd4bf;
+    /* Couleur teal-400 */
+    border-radius: 10px;
+    border: 2px solid #0f172a;
+    /* Crée un petit espacement autour du curseur */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #2ed1bb;
+    /* Version un peu plus sombre au survol */
+}
+
+/* Pour Firefox */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #2dd4bf #0f172a;
 }
