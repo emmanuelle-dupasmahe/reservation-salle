@@ -47,11 +47,11 @@ export const reservationService = {
         method: 'POST',
         body: JSON.stringify(data)
     }),
-    update: async (id, data) => {
-        // modifier une réservation
-        const response = await axios.put(`${API_URL}/${id}`, data);
-        return response.data;
-    },
+    //modifier une réservation
+    update: (id, data) => fetchAPI(`/reservations/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data)
+    }),
     // annuler une réservation 
     delete: async (id) => {
         const response = await fetch(`${API_URL}/reservations/${id}`, {

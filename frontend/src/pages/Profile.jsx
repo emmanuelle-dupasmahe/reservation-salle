@@ -8,6 +8,13 @@ function Profile() {
     const [myReservations, setMyReservations] = useState([]);
     const [loading, setLoading] = useState(true);
 
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingResa, setEditingResa] = useState(null);
+    const [editObjet, setEditObjet] = useState('');
+    const [editHeureFin, setEditHeureFin] = useState('');
+
+
+
     useEffect(() => {
         loadMyReservations();
     }, []);
@@ -15,15 +22,37 @@ function Profile() {
     const loadMyReservations = async () => {
         try {
             const data = await reservationService.getPlanning();
-            // On ne garde que les réservations de l'utilisateur connecté
+            // on ne garde que les réservations de l'utilisateur connecté
             const filtered = data.filter(r => Number(r.user_id) === Number(user.id));
-            // On trie par date la plus proche
+            // on trie par date la plus proche
             const sorted = filtered.sort((a, b) => new Date(a.date_resa) - new Date(b.date_resa));
             setMyReservations(sorted);
         } catch (err) {
             console.error("Erreur chargement profil", err);
         } finally {
             setLoading(false);
+        }
+    };
+
+    //fonction pour pour ouvrir la modale
+    const openEditModal = (resa) => {
+        setEditingResa(resa);
+        setEditObjet(resa.objet);
+        setEditHeureFin(parseInt(resa.heure_fin.split(':')[0]));
+        setIsEditModalOpen(true);
+    };
+
+    // fonction pour enregistrer
+    const handleUpdate = async () => {
+        try {
+            await reservationService.update(editingResa.id, {
+                objet: editObjet,
+                heure_fin: `${editHeureFin}:00:00`
+            });
+            setIsEditModalOpen(false);
+            loadMyReservations(); // On rafraîchit la liste
+        } catch (err) {
+            alert("Erreur lors de la modification");
         }
     };
 
@@ -62,8 +91,8 @@ function Profile() {
                                     </div>
                                     <div className="flex gap-3">
                                         <button
-                                            onClick={() => alert('Fonction modifier à lier ici')}
-                                            className="px-4 py-2 bg-slate-700 text-white rounded-lg text-xs font-bold uppercase hover:bg-slate-600 transition-all"
+                                            onClick={() => openEditModal(res)}
+                                            className="px-4 py-2 bg-slate-700 text-white rounded-lg text-xs font-bold uppercase hover:bg-teal-400 hover:text-black transition-all"
                                         >
                                             Modifier
                                         </button>
@@ -84,6 +113,56 @@ function Profile() {
                     </div>
                 </section>
             </div>
+            {/* MODALE DE MODIFICATION */}
+            {isEditModalOpen && (
+                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+                    <div className="bg-slate-800 p-8 rounded-2xl border-2 border-teal-400 w-full max-w-md shadow-2xl text-white">
+                        <h2 className="text-teal-400 text-2xl font-black mb-4 uppercase italic">Modifier la réunion</h2>
+
+                        <div className="mb-6">
+                            <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Objet de la réunion</label>
+                            <input
+                                type="text"
+                                value={editObjet}
+                                onChange={(e) => setEditObjet(e.target.value)}
+                                className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 outline-none focus:border-teal-400 text-white font-medium"
+                            />
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Heure de fin</label>
+                            <select
+                                value={editHeureFin}
+                                onChange={(e) => setEditHeureFin(parseInt(e.target.value))}
+                                className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
+                            >
+                                {/* On génère les heures de fin possibles (après l'heure de début actuelle) */}
+                                {Array.from({ length: 12 }, (_, i) => i + 8)
+                                    .filter(h => h > parseInt(editingResa?.heure_debut.split(':')[0]))
+                                    .map(h => (
+                                        <option key={h} value={h}>{h}h00</option>
+                                    ))
+                                }
+                            </select>
+                        </div>
+
+                        <div className="flex gap-4 justify-end">
+                            <button
+                                onClick={() => setIsEditModalOpen(false)}
+                                className="px-6 py-2 rounded-lg border border-slate-600 text-slate-400 hover:bg-slate-700 hover:text-white transition-all text-xs font-bold uppercase"
+                            >
+                                Annuler
+                            </button>
+                            <button
+                                onClick={handleUpdate}
+                                className="px-6 py-2 rounded-lg bg-teal-400 text-black font-black hover:bg-teal-300 transition-all shadow-lg text-xs font-bold uppercase"
+                            >
+                                Enregistrer les modifications
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

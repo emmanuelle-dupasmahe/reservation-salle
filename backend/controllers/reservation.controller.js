@@ -72,3 +72,27 @@ export const deleteReservation = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// FONCTION POUR MODIFIER UNE RÉSERVATION
+export const updateReservation = async (req, res) => {
+    const { id } = req.params;
+    const { objet, heure_fin } = req.body;
+    const userId = req.userId || req.user.id; // On s'adapte à ton middleware
+
+    try {
+        // On exécute la mise à jour SQL
+        const [result] = await db.execute(
+            'UPDATE reservations SET objet = ?, heure_fin = ? WHERE id = ? AND user_id = ?',
+            [objet, heure_fin, id, userId]
+        );
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: "Réservation non trouvée ou modification non autorisée" });
+        }
+
+        res.json({ message: "Réservation mise à jour avec succès" });
+    } catch (error) {
+        console.error("Erreur SQL update:", error);
+        res.status(500).json({ error: error.message });
+    }
+};
