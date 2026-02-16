@@ -13,7 +13,7 @@ function Home() {
             </span>
 
             <h1 className="text-white uppercase text-5xl md:text-5xl font-black mb-4 tracking-wider">
-                Réservation de salle
+                Réservation salle
             </h1>
 
             <p className="text-slate-400 text-lg md:text-xl max-w-lg mb-10 leading-relaxed font-light">

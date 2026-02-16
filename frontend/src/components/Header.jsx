@@ -14,13 +14,13 @@ function Header() {
         <header className="sticky top-0 z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
             <div className="max-w-7xl mx-auto px-4 md:px-6 h-16 md:h-20 flex items-center justify-between">
 
-                {/* Logo : Taille réduite sur mobile */}
+                {/* Logo : réduit sur mobile */}
                 <Link to="/" className="text-lg md:text-2xl font-black italic tracking-tighter text-white flex-shrink-0">
                     Tech<span className="text-teal-400">Space</span>
-                    <span className="hidden xs:inline"> Solutions</span>
+                    <span className="hidden sm:inline"> Solutions</span>
                 </Link>
 
-                {/* Navigation : On remplace hidden par un affichage flex discret sur mobile */}
+                {/* Navigation : flex sur mobile */}
                 <nav className="flex items-center gap-3 md:gap-8">
                     {isAuthenticated && (
                         <>
