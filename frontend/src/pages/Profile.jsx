@@ -13,6 +13,8 @@ function Profile() {
     const [editObjet, setEditObjet] = useState('');
     const [editHeureFin, setEditHeureFin] = useState('');
 
+    const [allReservations, setAllReservations] = useState([]);
+
 
 
     useEffect(() => {
@@ -22,6 +24,7 @@ function Profile() {
     const loadMyReservations = async () => {
         try {
             const data = await reservationService.getPlanning();
+            setAllReservations(data);
             // on ne garde que les réservations de l'utilisateur connecté
             const filtered = data.filter(r => Number(r.user_id) === Number(user.id));
             // on trie par date la plus proche
@@ -44,6 +47,35 @@ function Profile() {
 
     // fonction pour enregistrer
     const handleUpdate = async () => {
+
+        //pour éviter que 2 réunions se chevauchent
+        const isCollision = allReservations.some(resa => {
+            if (resa.id === editingResa.id) return false;
+
+            // Formatage de la date de la réservation existante (YYYY-MM-DD)
+            const d = new Date(resa.date_resa);
+            const dateLocaleBDD = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+            // Formatage de la date de la réservation qu'on modifie
+            const de = new Date(editingResa.date_resa);
+            const dateEditing = `${de.getFullYear()}-${String(de.getMonth() + 1).padStart(2, '0')}-${String(de.getDate()).padStart(2, '0')}`;
+
+            if (dateLocaleBDD !== dateEditing) return false;
+
+            const hStartExistante = parseInt(resa.heure_debut.split(':')[0]);
+            const hEndExistante = parseInt(resa.heure_fin.split(':')[0]);
+
+            const hStartSaisie = parseInt(editingResa.heure_debut.split(':')[0]);
+            const hEndSaisie = editHeureFin;
+
+            return hStartSaisie < hEndExistante && hEndSaisie > hStartExistante;
+        });
+
+        if (isCollision) {
+            alert("Impossible : Cette modification empiète sur une autre réservation !");
+            return;
+        }
+
         try {
             await reservationService.update(editingResa.id, {
                 objet: editObjet,

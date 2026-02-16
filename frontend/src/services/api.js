@@ -52,13 +52,10 @@ export const reservationService = {
         method: 'PUT',
         body: JSON.stringify(data)
     }),
+    
     // annuler une réservation 
-    delete: async (id) => {
-        const response = await fetch(`${API_URL}/reservations/${id}`, {
-            method: 'DELETE',
-            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-        });
-        if (!response.ok) throw new Error("Erreur lors de la suppression");
-        return true;
-    }
+    delete: (id) => fetchAPI(`/reservations/${id}`, {
+        method: 'DELETE'
+    })
+
 };
