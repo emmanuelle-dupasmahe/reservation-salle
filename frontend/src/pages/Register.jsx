@@ -114,9 +114,10 @@ function Register() {
                             name="password"
                             value={formData.password}
                             onChange={handleChange}
-                            className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400 transition-all"
-                            placeholder="••••••••"
+                            className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400 transition-all placeholder:text-slate-500"
+                            placeholder="minimum 8 caractères"
                             required
+                            minLength="8"
                             disabled={loading}
                         />
                     </div>
