@@ -31,8 +31,8 @@ function Register() {
             setError('Les mots de passe ne correspondent pas');
             return;
         }
-        if (formData.password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
+        if (formData.password.length < 8) {
+            setError('Le mot de passe doit contenir au moins 8 caractères');
             return;
         }
 
