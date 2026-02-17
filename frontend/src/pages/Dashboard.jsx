@@ -208,15 +208,28 @@ function Dashboard() {
                                                                 )}
 
                                                                 {/* infos de la réunion */}
-                                                                <p className="font-black text-black/80">{resa.lastname}</p>
-                                                                <p className="font-normal lowercase italic truncate w-full px-1">{resa.objet}</p>
+
+
+                                                                <div className="flex flex-col h-full justify-center px-1 overflow-hidden">
+                                                                    {/* Prénom et nom */}
+                                                                    <p className="font-black truncate text-black/80">
+                                                                        {resa.firstname} {resa.lastname.toUpperCase()}
+                                                                    </p>
+
+                                                                    {/* L'objet de la réunion en dessous */}
+                                                                    <p className="font-normal lowercase italic truncate w-full px-1">
+                                                                        {resa.objet}
+                                                                    </p>
+                                                                </div>
+
                                                             </>
                                                         ) : (
                                                             /* trois points pour les heures suivantes du même créneau */
                                                             <span className=" text-black font-bold">⋮</span>
                                                         )}
                                                     </div>
-                                                )}
+                                                )
+                                                }
                                             </td>
                                         );
                                     })}
@@ -227,54 +240,56 @@ function Dashboard() {
                 </div>
             </div>
 
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
-                    <div className="bg-slate-800 p-8 rounded-2xl border-2 border-teal-400 w-full max-w-md shadow-2xl text-white">
-                        <h2 className="text-teal-400 text-2xl font-bold mb-4 uppercase italic">Nouvelle Réservation</h2>
+            {
+                isModalOpen && (
+                    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+                        <div className="bg-slate-800 p-8 rounded-2xl border-2 border-teal-400 w-full max-w-md shadow-2xl text-white">
+                            <h2 className="text-teal-400 text-2xl font-bold mb-4 uppercase italic">Nouvelle Réservation</h2>
 
-                        <p className="mb-6 text-slate-300">Le {selectedSlot.dateAffichee}</p>
+                            <p className="mb-6 text-slate-300">Le {selectedSlot.dateAffichee}</p>
 
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div>
-                                <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Début</label>
-                                <div className="p-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
-                                    {selectedSlot.heure}h00
+                            <div className="grid grid-cols-2 gap-4 mb-6">
+                                <div>
+                                    <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Début</label>
+                                    <div className="p-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
+                                        {selectedSlot.heure}h00
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Fin</label>
+                                    <select
+                                        value={heureFin}
+                                        onChange={(e) => setHeureFin(parseInt(e.target.value))}
+                                        className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
+                                    >
+                                        {/* heures de fin jusqu'à 19h */}
+                                        {Array.from({ length: 19 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
+                                            <option key={h} value={h}>{h}h00</option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
-                            <div>
-                                <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Fin</label>
-                                <select
-                                    value={heureFin}
-                                    onChange={(e) => setHeureFin(parseInt(e.target.value))}
-                                    className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 text-white outline-none focus:border-teal-400"
-                                >
-                                    {/* heures de fin jusqu'à 19h */}
-                                    {Array.from({ length: 19 - selectedSlot.heure }, (_, i) => selectedSlot.heure + 1 + i).map(h => (
-                                        <option key={h} value={h}>{h}h00</option>
-                                    ))}
-                                </select>
+
+                            <div className="mb-6">
+                                <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Objet de la réunion</label>
+                                <input
+                                    type="text"
+                                    value={objet}
+                                    onChange={(e) => setObjet(e.target.value)}
+                                    className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 outline-none focus:border-teal-400 text-white"
+                                    placeholder="Ex: Briefing équipe..."
+                                />
+                            </div>
+
+                            <div className="flex gap-4 justify-end">
+                                <button onClick={() => setIsModalOpen(false)} className="px-6 py-2 rounded-lg border border-slate-600 hover:bg-slate-700 transition-all">Annuler</button>
+                                <button onClick={handleConfirmBooking} className="px-6 py-2 rounded-lg bg-teal-400 text-black font-black hover:bg-teal-300 transition-all shadow-lg">CONFIRMER</button>
                             </div>
                         </div>
-
-                        <div className="mb-6">
-                            <label className="block text-teal-400 text-xs font-bold mb-2 uppercase">Objet de la réunion</label>
-                            <input
-                                type="text"
-                                value={objet}
-                                onChange={(e) => setObjet(e.target.value)}
-                                className="w-full p-3 rounded-lg bg-slate-700 border border-slate-600 outline-none focus:border-teal-400 text-white"
-                                placeholder="Ex: Briefing équipe..."
-                            />
-                        </div>
-
-                        <div className="flex gap-4 justify-end">
-                            <button onClick={() => setIsModalOpen(false)} className="px-6 py-2 rounded-lg border border-slate-600 hover:bg-slate-700 transition-all">Annuler</button>
-                            <button onClick={handleConfirmBooking} className="px-6 py-2 rounded-lg bg-teal-400 text-black font-black hover:bg-teal-300 transition-all shadow-lg">CONFIRMER</button>
-                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )
+            }
+        </div >
     );
 }
 

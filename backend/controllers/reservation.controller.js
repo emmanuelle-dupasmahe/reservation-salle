@@ -77,7 +77,7 @@ export const deleteReservation = async (req, res) => {
 export const updateReservation = async (req, res) => {
     const { id } = req.params;
     const { objet, heure_fin } = req.body;
-    const userId = req.userId || req.user.id; // On s'adapte à ton middleware
+    const userId = req.userId || req.user.id;
 
     try {
         // On exécute la mise à jour SQL
